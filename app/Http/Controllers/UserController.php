@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    protected $guard_name = 'web';
+
     /**
      * Display a listing of the resource.
      *
