@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Blog;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
+use App\Models\User;
 
 class BlogController extends Controller
 {
@@ -17,10 +18,9 @@ class BlogController extends Controller
 
     public function __construct()
     {
-        $this->middleware('permission:ver-blog | crear-blog | editar-blog | eliminar-blog')->only('index');
-        $this->middleware('permission:crear-blog')->only('create', 'store');
-        $this->middleware('permission:editar-blog', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:eliminar-blog', ['only' => ['destroy']]);
+        // $this->middleware('permission:blogs.index | crear-blog | editar-blog | eliminar-blog')->only('index');
+        // $this->middleware('permission:crear-blog')->only('create', 'store');
+        // $this->middleware('permission:editar-blog', ['only' => ['edit', 'update']]);
     }
     /**
      * Display a listing of the resource.
@@ -29,7 +29,14 @@ class BlogController extends Controller
      */
     public function index()
     {
-        $blogs = Blog::paginate(5);
+        $user = User::find(auth()->id());
+        if($user->hasRole('admin')){
+            $blogs = Blog::select('blogs.*', 'users.name')
+            ->join('users', 'blogs.user_id', '=', 'users.id')->paginate(5);
+        }else{
+            $blogs = Blog::select('blogs.*', 'users.name')
+            ->join('users', 'blogs.user_id', '=', 'users.id')->where('blogs.user_id','=',auth()->id())->paginate(5);
+        }
         return view('blogs.index', compact('blogs'));
     }
 
@@ -41,7 +48,7 @@ class BlogController extends Controller
     public function create()
     {
         //$permissions = Permission::get();
-        return view('roles.create');
+        return view('blogs.create');
     }
 
     /**
@@ -52,14 +59,15 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, ['title' => 'required|string|min:3', 'content' => 'required|string|min:3']);
-
-        $role = Blog::create([
-            'name' => $request->input('name'),
-            'content' => $request->input('content')
+        $validate = $this->validate($request, ['title' => 'required|string|min:3', 'content' => 'required|string|min:3', 'user_id' => 'required|min:1']);
+      
+        $blog = Blog::create([
+            'title' => $validate['title'],
+            'content' => $validate['content'],
+            'user_id' => intVal($validate['user_id'])
         ]);
 
-        return redirect()->route('blogs.index');
+        return redirect()->route('blog.index');
     }
 
     /**
@@ -79,9 +87,10 @@ class BlogController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Blog $blog)
+    public function edit($id)
     {
-        return view('roles.edit', compact('blog'));
+        $blog = Blog::find($id);
+        return view('blogs.edit', compact('blog'));
     }
 
     /**
@@ -93,10 +102,15 @@ class BlogController extends Controller
      */
     public function update(Request $request,Blog $blog)
     {
-        $this->validate($request, ['title' => 'required|string|min:3', 'content' => 'required|string|min:3']);
-        $blog = Blog::find($blog->id);
-        $blog->update($request->all());
-        return redirect()->route('blogs.index');
+       $validate = $this->validate($request, ['title' => 'required|string|min:3', 'content' => 'required|string|min:3', 'user_id' => 'required|min:1']);
+      $blog = Blog::find($blog->id);
+        $blog->update([
+            'title' => $validate['title'],
+            'content' => $validate['content'],
+            'user_id' => intVal($validate['user_id'])
+        ]);
+
+        return redirect()->route('blog.index');
     }
 
     /**
@@ -108,6 +122,6 @@ class BlogController extends Controller
     public function destroy(Blog $blog)
     {
         $blog->delete();
-        return redirect()->route('blogs.index');
+        return redirect()->route('blog.index');
     }
 }

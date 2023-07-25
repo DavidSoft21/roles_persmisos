@@ -23,20 +23,25 @@
     @yield('css')
 </head>
 <body>
-
 <div id="app">
     <div class="main-wrapper main-wrapper-1">
+
         <div class="navbar-bg"></div>
         <nav class="navbar navbar-expand-lg main-navbar">
             @include('layouts.header')
 
+
         </nav>
+
         <div class="main-sidebar main-sidebar-postion">
             @include('layouts.sidebar')
         </div>
         <!-- Main Content -->
         <div class="main-content">
             @yield('content')
+
+        
+            
         </div>
         <footer class="main-footer">
             @include('layouts.footer')

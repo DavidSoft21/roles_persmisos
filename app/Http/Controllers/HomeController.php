@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Blog;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Permission;
 
 class HomeController extends Controller
 {
@@ -13,7 +16,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
     }
 
     /**
@@ -23,6 +26,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $blogs = Blog::select('blogs.*', 'users.*')
+        ->join('users', 'blogs.user_id', '=', 'users.id')->paginate(5)->sortBy(['id','created_at']);
+        return view('home', compact('blogs'));
     }
 }

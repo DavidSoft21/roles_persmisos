@@ -34,18 +34,17 @@
     @else
         <li class="dropdown"><a href="#" data-toggle="dropdown"
                                 class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                {{--                <img alt="image" src="#" class="rounded-circle mr-1">--}}
-                <div class="d-sm-none d-lg-inline-block">{{ __('messages.common.hello') }}</div>
+                <div class="d-sm-none d-lg-inline-block">{{ __('Login') }}</div>
             </a>
+           
             <div class="dropdown-menu dropdown-menu-right">
-                <div class="dropdown-title">{{ __('messages.common.login') }}
-                    / {{ __('messages.common.register') }}</div>
-                <a href="{{ route('login') }}" class="dropdown-item has-icon">
-                    <i class="fas fa-sign-in-alt"></i> {{ __('messages.common.login') }}
-                </a>
-                <div class="dropdown-divider"></div>
                 <a href="{{ route('register') }}" class="dropdown-item has-icon">
-                    <i class="fas fa-user-plus"></i> {{ __('messages.common.register') }}
+                    <i class="fas fa-user-plus"></i> {{ __('register') }}
+                </a>
+                
+
+                <a href="{{ route('login') }}" class="dropdown-item has-icon">
+                    <i class="fas fa-sign-in-alt"></i> {{ __('login') }}
                 </a>
             </div>
         </li>

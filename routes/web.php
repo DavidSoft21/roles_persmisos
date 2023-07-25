@@ -17,18 +17,19 @@ use App\Http\Controllers\BlogController;
 |
 */
 
-
-Route::get('/', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm']);
-
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 Auth::routes();
-
+Route::get('/',[App\Http\Controllers\HomeController::class, 'index']);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::group(['middleware' => ['auth']], function(){
+/**
+ * 'can:users.index' - limitar a un permiso
+ * 'permission:users.index|users.edit' - limitar varios permisos
+ * 'role:admin|blogger' - limitar uno o varios roles
+ */
+Route::group(['middleware' => ['auth','role:admin|blogger']], function(){
     Route::resource('rol',RolController::class);
-    Route::resource('user',UserController::class);
     Route::resource('blog',BlogController::class);
+    Route::resource('user',UserController::class);
+
 });
+

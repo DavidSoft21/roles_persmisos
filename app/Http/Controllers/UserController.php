@@ -18,6 +18,16 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+        // $this->middleware('permission:users.index|users.edit|users.create|users.destroy')->only('index');
+        // $this->middleware('permission:crear-blog')->only('create', 'store');
+        // $this->middleware('permission:editar-blog', ['only' => ['edit', 'update']]);
+        // $this->middleware('permission:eliminar-blog', ['only' => ['destroy']]);
+        $this->middleware('role:admin');
+    }
+    
     public function index()
     {
         //User::all(5);
@@ -45,16 +55,18 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+    //    dd($request);
+
         $this->validate($request, [
             'name' => 'required|string|min:3',
-            'email' => 'required|email|unique',
-            'password' => 'required|min:8|same:confirm-password',
-            'roles' => 'required|string|min:3'
+            'email' => 'required|email',
+            'password' => 'required|min:8|same:password-confirm',
+            'roles' => 'required'
         ]);
         $inputs = $request->all();
         $inputs['password'] = Hash::make($inputs['password']);
         $user = User::create($inputs);
-        $user->assingRole($request->input('roles'));
+        $user->assignRole($request->input('roles'));
 
         return redirect()->route('user.index');
     }
@@ -97,9 +109,9 @@ class UserController extends Controller
         $user = User::find($id);
 
         $this->validate($request, [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$id,
-            'password' => 'same:confirm-password',
+            'name' => 'required|string|min:3',
+            'email' => 'required|email',
+            'password' => 'required|min:8|same:password-confirm',
             'roles' => 'required'
         ]);
         $inputs = $request->all();

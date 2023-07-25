@@ -1,10 +1,10 @@
 @extends('layouts.auth_app')
 @section('title')
-    Admin Login
+    Login
 @endsection
 @section('content')
     <div class="card card-primary">
-        <div class="card-header"><h4>Admin Login</h4></div>
+        <div class="card-header"><h4>Login</h4></div>
 
         <div class="card-body">
             <form method="POST" action="{{ route('login') }}">
@@ -33,11 +33,8 @@
                 <div class="form-group">
                     <div class="d-block">
                         <label for="password" class="control-label">Password</label>
-                        <div class="float-right">
-                            <a href="{{ route('password.request') }}" class="text-small">
-                                Forgot Password?
-                            </a>
-                        </div>
+        
+                        
                     </div>
                     <input aria-describedby="passwordHelpBlock" id="password" type="password"
                            value="{{ (Cookie::get('password') !== null) ? Cookie::get('password') : null }}"
@@ -62,6 +59,16 @@
                         Login
                     </button>
                 </div>
+                <div class="float-right">
+                            <a href="{{ route('register') }}" class="text-small">
+                                Create Account
+                            </a>
+                        </div>
+                        <div class="float-left">
+                            <a href="{{ route('password.request') }}" class="text-small">
+                                Forgot Password?
+                            </a>
+                        </div>
             </form>
         </div>
     </div>

@@ -14,12 +14,12 @@
 
                         
                             <a class="btn btn-success btn-lg" href="{{ route('user.create')  }}">Add</a>
-                            
+                             <div class="overflow-auto" style="overflow-x: scroll;">
                                 <table class="table  mt-2">
                                     <thead style="background: #9894ed5d">
                                       <tr>
                                         <th style="display: none">ID</th>
-                                        <th>Name</th>
+                                        <th>name</th>
                                         <th>Email</th>
                                         <th>Role</th>
                                         <th>Actions</th>
@@ -28,9 +28,9 @@
                                     <tbody>
                                         @foreach($users as $user)
                                           <tr>
-                                            <td style="display: none">{{ $user->id }}</td>
-                                            <th>{{ $user->name }}</th>
-                                            <td>{{ $user->email }}</td>
+                                            <td style="display:none">{{ $user->id }}</td>
+                                            <td>{{ $user->name }}</td>
+                                            <td class="">{{ $user->email }}</td>
                                             <td>
                                                 @if(!empty($user->getRoleNames()))
                                             
@@ -44,7 +44,7 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <a class="btn btn-warning" href="{{route('user.edit',$user->id)}}">edit</a>
+                                                <a class="btn btn-warning" href="{{route('user.edit',$user->id)}}" style="width:65px">edit</a>
                                                 {!! Form::open(['route' => ['user.destroy',$user->id], 'method' => 'DELETE', 'style' =>'display:inline']) !!}
                                                 {!! Form::submit('delete',['class'=> 'btn btn-danger']) !!} 
                                                 {!! Form::close() !!}  
@@ -53,7 +53,7 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                            
+                             </div>
                               <div class="pagination justify-end">
                                 {{ $users->links() }}
                               </div>

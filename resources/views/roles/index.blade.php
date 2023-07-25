@@ -12,9 +12,10 @@
                         <div class="card-body">
                             <h3 class="text-center">Roles List</h3>
 
-                            @can('crear-rol')
+                            @can('roles.create')
                                 <a class="btn btn-success btn-lg" href="{{ route('rol.create')  }}">Add</a>
                             @endcan
+                            <div class="overflow-auto" style="overflow-x: scroll;">
                                 <table class="table  mt-2">
                                     <thead style="background: #9894ed5d">
                                       <tr>
@@ -26,14 +27,14 @@
                                     <tbody>
                                         @foreach($roles as $rol)
                                           <tr>
-                                            <td style="">{{ $rol->id }}</td>
-                                            <th>{{ $rol->name }}</th>
+                                            <td style="" class="">{{ $rol->id }}</td>
+                                            <td>{{ $rol->name }}</td>
                                             <td>
-                                                @can('editar-rol')
-                                                <a class="btn btn-warning" href="{{route('rol.edit',$rol->id)}}">edit</a>
+                                                @can('roles.edit')
+                                                <a class="btn btn-warning" href="{{route('rol.edit',$rol->id)}}" style="width:65px">edit</a>
                                                 @endcan
 
-                                                @can('eliminar-rol')
+                                                @can('roles.destroy')
                                                 {!! Form::open(['route' => ['rol.destroy',$rol->id], 'method' => 'DELETE', 'style' =>'display:inline']) !!}
                                                 {!! Form::submit('delete',['class'=> 'btn btn-danger']) !!} 
                                                 {!! Form::close() !!} 
@@ -43,11 +44,12 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                            
+                            </div>
                               <div class="pagination justify-end">
                                 {{ $roles->links() }}
                               </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>
